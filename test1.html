@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wizfair Travels – Book Flights, Hotels, Cruises & Insurance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --brand-primary: #0056a8;  /* Wizfair blue (approx) */
+      --brand-accent: #f47321;   /* Wizfair orange (approx) */
+      --bg-light: #f7f9fc;
+      --bg-white: #ffffff;
+      --text-main: #1f2933;
+      --text-muted: #6b7280;
+      --border-soft: #e5e7eb;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.09);
+      --transition-fast: 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      background: var(--bg-light);
+      line-height: 1.5;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      gap: 24px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-wrap img {
+      height: 40px;
+      width: auto;
+    }
+
+    .brand-text {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    nav {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .nav-links a {
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--brand-accent), var(--brand-primary));
+      transition: width var(--transition-fast);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+    }
+
+    .contact-info {
+      text-align: right;
+      line-height: 1.2;
+    }
+
+    .contact-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .contact-number {
+      font-weight: 600;
+      color: var(--brand-primary);
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      border-radius: 999px;
+      padding: 9px 18px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), color var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-accent), var(--brand-primary));
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(0, 86, 168, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(0, 86, 168, 0.45);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--brand-primary);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.03);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: #0f172a;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      background: radial-gradient(circle at top left, #e0f2ff 0, transparent 50%),
+        radial-gradient(circle at bottom right, #fff2e6 0, transparent 50%),
+        #f7fafc;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 10% 20%, rgba(0, 86, 168, 0.08) 0, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(244, 115, 33, 0.08) 0, transparent 45%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+      gap: 40px;
+      align-items: center;
+      padding: 40px 16px 60px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brand-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(191, 219, 254, 0.8);
+      margin-bottom: 10px;
+    }
+
+    .eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--brand-accent);
+    }
+
+    .hero-title {
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(120deg, var(--brand-accent), var(--brand-primary));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin-bottom: 18px;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      backdrop-filter: blur(6px);
+    }
+
+    .meta-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--brand-accent);
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 260px;
+    }
+
+    .hero-card {
+      position: relative;
+      background: radial-gradient(circle at top left, #fdfdfd, #edf4ff);
+      border-radius: 26px;
+      padding: 20px;
+      box-shadow: var(--shadow-soft);
+      max-width: 360px;
+      margin-left: auto;
+      border: 1px solid rgba(209, 213, 219, 0.6);
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background-image: conic-gradient(
+        from 180deg,
+        rgba(244, 115, 33, 0.05),
+        rgba(0, 86, 168, 0.12),
+        rgba(244, 115, 33, 0.05)
+      );
+      opacity: 0.9;
+      filter: blur(24px);
+    }
+
+    .hero-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .globe-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      color: #f9fafb;
+      font-size: 11px;
+      margin-bottom: 14px;
+    }
+
+    .globe-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #ffffff, #6ea8ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .globe-icon span {
+      transform: translateY(-1px);
+    }
+
+    .floating-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      font-size: 11px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 14px;
+      padding: 10px 11px;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 10px;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .stat-chip-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .hero-plane {
+      position: absolute;
+      right: -20px;
+      top: -10px;
+      width: 110px;
+      opacity: 0.9;
+      transform: rotate(6deg);
+      filter: drop-shadow(0 10px 25px rgba(15, 23, 42, 0.35));
+    }
+
+    .hero-floating-tag {
+      position: absolute;
+      bottom: -18px;
+      right: 24px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.17);
+    }
+
+    .hero-floating-tag span {
+      font-size: 14px;
+    }
+
+    /* SEARCH MODULE */
+    .search-section {
+      margin-top: -80px;
+      position: relative;
+      z-index: 2;
+      padding: 0 16px 40px;
+    }
+
+    .search-card {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      padding: 14px 14px 18px;
+    }
+
+    .search-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 4px;
+      background: #f3f4f6;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      font-size: 13px;
+    }
+
+    .search-tab {
+      flex: 1;
+      min-width: 80px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 500;
+      color: #4b5563;
+      transition: background var(--transition-fast), color var(--transition-fast),
+        box-shadow var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .search-tab.active {
+      background: #ffffff;
+      color: var(--brand-primary);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .search-form {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+      align-items: flex-end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    .field label {
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: #f9fafb;
+      transition: border var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .input-wrap:focus-within {
+      border-color: rgba(0, 86, 168, 0.75);
+      box-shadow: 0 0 0 1px rgba(0, 86, 168, 0.15);
+      background: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .input-wrap span {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .input,
+    .select {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 13px;
+      width: 100%;
+      color: var(--text-main);
+    }
+
+    .input::placeholder {
+      color: #9ca3af;
+    }
+
+    .search-btn {
+      width: 100%;
+      justify-content: center;
+      padding-inline: 0;
+    }
+
+    .search-btn span {
+      font-size: 16px;
+    }
+
+    .search-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 40px 16px;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .section-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--brand-primary);
+      margin-bottom: 6px;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 520px;
+    }
+
+    .section-link {
+      font-size: 12px;
+      color: var(--brand-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    /* SERVICE HIGHLIGHTS */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .service-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        border var(--transition-fast), background var(--transition-fast);
+      cursor: default;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+      border-color: rgba(0, 86, 168, 0.36);
+      background: linear-gradient(145deg, #ffffff, #f7fbff);
+    }
+
+    .service-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 20% 20%, #ffffff, rgba(0, 86, 168, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .service-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .service-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .service-meta {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--brand-primary);
+    }
+
+    /* PROMOTIONS */
+    .promo-grid {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 18px;
+    }
+
+    .promo-feature {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #002c57, #0056a8);
+      color: #f9fafb;
+      padding: 18px 18px 16px;
+      box-shadow: 0 18px 60px rgba(15, 23, 42, 0.5);
+    }
+
+    .promo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.45);
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    .promo-percent {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .promo-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .promo-text {
+      font-size: 12px;
+      color: #e5e7eb;
+      margin-bottom: 12px;
+    }
+
+    .promo-dates {
+      font-size: 11px;
+      color: #bfdbfe;
+    }
+
+    .promo-map-dots {
+      position: absolute;
+      right: -12px;
+      bottom: -4px;
+      width: 120px;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .promo-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .deal-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 10px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .deal-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+    }
+
+    .deal-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--brand-primary);
+    }
+
+    .deal-main {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .deal-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .deal-price {
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--brand-accent);
+    }
+
+    /* TESTIMONIALS */
+    .test-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: 18px;
+    }
+
+    .trust-panel {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.06);
+      font-size: 12px;
+    }
+
+    .trust-score {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+
+    .rating-badge {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      background: radial-gradient(circle at 30% 20%, #ffffff, #fef3c7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: 1px solid rgba(253, 224, 71, 0.7);
+    }
+
+    .rating-stars {
+      color: #f59e0b;
+      font-size: 14px;
+    }
+
+    .rating-value {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .rating-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+    }
+
+    .trust-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .partner-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .partner-pill {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      font-size: 11px;
+      background: #f9fafb;
+      color: #4b5563;
+    }
+
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .testimonial-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 14px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+    }
+
+    .testimonial-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #0056a8, #f97316);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .user-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .user-name {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .user-trip {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .testimonial-body {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .testimonial-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 30px 16px 18px;
+      margin-top: 30px;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2.2fr repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      font-size: 13px;
+    }
+
+    .footer-logo img {
+      height: 34px;
+      margin-bottom: 8px;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: #9ca3af;
+      max-width: 320px;
+    }
+
+    .footer-col-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #f9fafb;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .footer-links a:hover {
+      color: #f97316;
+    }
+
+    .newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .newsletter-input-wrap {
+      display: flex;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 999px;
+      padding: 4px 4px 4px 10px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .newsletter-input {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 12px;
+      color: #e5e7eb;
+      flex: 1;
+    }
+
+    .newsletter-input::placeholder {
+      color: #6b7280;
+    }
+
+    .btn-footer {
+      padding: 6px 14px;
+      font-size: 12px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--brand-accent), var(--brand-primary));
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .social-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    .social-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .social-icon:hover {
+      background: #f97316;
+      transform: translateY(-2px);
+    }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 20px auto 0;
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      padding-top: 12px;
+      font-size: 11px;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      nav {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .header-inner {
+        padding: 10px 0;
+      }
+
+      .hero-inner {
+        grid-template-columns: minmax(0, 1.1fr);
+        padding-top: 24px;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .search-section {
+        margin-top: -40px;
+      }
+
+      .search-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .promo-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .test-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .footer-inner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .promo-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .header-right {
+        display: none;
+      }
+
+      .hero-inner {
+        padding: 20px 0 40px;
+      }
+
+      .hero-card {
+        margin: 0 auto;
+      }
+
+      .search-section {
+        margin-top: -20px;
+      }
+
+      .search-card {
+        padding: 12px;
+      }
+
+      .search-form {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .grid-4 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .promo-list {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .testimonials {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      footer {
+        padding-top: 24px;
+      }
+
+      .footer-inner {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- HEADER -->
+    <header>
+      <div class="container">
+        <div class="header-inner">
+          <div class="logo-wrap">
+            <img src="https://www.wizfairtravels.com/images/logo.png" alt="Wizfair Travels logo" />
+            <div class="brand-text">Smart way to travel</div>
+          </div>
+
+          <nav>
+            <div class="nav-links">
+              <a href="#search">Book</a>
+              <a href="#services">Services</a>
+              <a href="#deals">Deals</a>
+              <a href="#trust">Why Wizfair</a>
+            </div>
+          </nav>
+
+          <div class="header-right">
+            <div class="contact-info">
+              <div class="contact-label">24x7 support</div>
+              <div class="contact-number">+1-800-WIZFAIR</div>
+            </div>
+            <button class="btn-ghost">Sign in</button>
+            <button class="btn-primary">
+              Plan a trip
+              <span>✈️</span>
+            </button>
+          </div>
+
+          <div class="hamburger" aria-label="Open navigation">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            Global flight + hotel deals
+          </div>
+          <h1 class="hero-title">
+            Your <span class="hero-highlight">next destination</span> is just
+            a few clicks away.
+          </h1>
+          <p class="hero-subtitle">
+            Book flights, hotels, cruises, and travel insurance in one
+            seamless flow with expert support from Wizfair Travel Advisors.
+          </p>
+
+          <div class="hero-cta-row">
+            <button class="btn-primary">
+              Start booking
+              <span>➡️</span>
+            </button>
+            <button class="btn-ghost">
+              Talk to an expert
+            </button>
+          </div>
+
+          <div class="hero-meta">
+            <div class="meta-pill">
+              <span class="meta-dot"></span>
+              2M+ trips booked worldwide
+            </div>
+            <div class="meta-pill">
+              💳 No-cost EMI &amp; secure payments
+            </div>
+            <div class="meta-pill">
+              ⭐ Rated 4.8/5 by real travellers
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-card">
+            <div class="hero-card-inner">
+              <div class="globe-badge">
+                <div class="globe-icon"><span>🌍</span></div>
+                Live fares updating in real time
+              </div>
+              <div class="floating-stats">
+                <div class="stat-card">
+                  <div class="stat-label">Today’s best deal</div>
+                  <div class="stat-value">Delhi → Dubai</div>
+                  <div class="stat-chip-row">
+                    <div class="chip">Save up to 32%</div>
+                  </div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-label">Last minute escapes</div>
+                  <div class="stat-value">115 offers</div>
+                  <div class="stat-chip-row">
+                    <div class="chip">Free date change</div>
+                  </div>
+                </div>
+              </div>
+              <img
+                class="hero-plane"
+                src="https://cdn-icons-png.flaticon.com/512/204/204308.png"
+                alt="Plane illustration"
+                onerror="this.style.display='none';"
+              />
+              <div class="hero-floating-tag">
+                <span>✅</span>
+                Protected with Wizfair travel insurance
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEARCH MODULE -->
+    <section id="search" class="search-section">
+      <div class="search-card">
+        <div class="search-tabs">
+          <button class="search-tab active" data-tab="flights">Flights</button>
+          <button class="search-tab" data-tab="hotels">Hotels</button>
+          <button class="search-tab" data-tab="cruises">Cruises</button>
+          <button class="search-tab" data-tab="insurance">Insurance</button>
+        </div>
+
+        <!-- Flights -->
+        <div class="search-panel" data-panel="flights">
+          <form class="search-form">
+            <div class="field">
+              <label>From</label>
+              <div class="input-wrap">
+                <span>🛫</span>
+                <input class="input" type="text" placeholder="City or airport" />
+              </div>
+            </div>
+            <div class="field">
+              <label>To</label>
+              <div class="input-wrap">
+                <span>🛬</span>
+                <input class="input" type="text" placeholder="City or airport" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Date</label>
+              <div class="input-wrap">
+                <span>📅</span>
+                <input class="input" type="date" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Class</label>
+              <div class="input-wrap">
+                <span>💺</span>
+                <select class="select">
+                  <option>Economy</option>
+                  <option>Premium Economy</option>
+                  <option>Business</option>
+                  <option>First</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <button type="submit" class="btn-primary search-btn">
+                <span>🔍</span> Search flights
+              </button>
+            </div>
+          </form>
+          <div class="search-note">
+            Free 24-hour cancellation on most tickets. Prices shown include taxes &amp; fees.
+          </div>
+        </div>
+
+        <!-- Hotels -->
+        <div class="search-panel" data-panel="hotels" style="display:none;">
+          <form class="search-form">
+            <div class="field">
+              <label>Location</label>
+              <div class="input-wrap">
+                <span>📍</span>
+                <input class="input" type="text" placeholder="City, area or hotel name" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Check-in</label>
+              <div class="input-wrap">
+                <span>📅</span>
+                <input class="input" type="date" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Check-out</label>
+              <div class="input-wrap">
+                <span>📅</span>
+                <input class="input" type="date" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Guests</label>
+              <div class="input-wrap">
+                <span>👥</span>
+                <select class="select">
+                  <option>2 Adults, 0 Children</option>
+                  <option>1 Adult</option>
+                  <option>2 Adults, 1 Child</option>
+                  <option>Family (4+)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <button type="submit" class="btn-primary search-btn">
+                <span>🔍</span> Search hotels
+              </button>
+            </div>
+          </form>
+          <div class="search-note">
+            Get member-only prices on select stays when you sign in.
+          </div>
+        </div>
+
+        <!-- Cruises -->
+        <div class="search-panel" data-panel="cruises" style="display:none;">
+          <form class="search-form">
+            <div class="field">
+              <label>Destination</label>
+              <div class="input-wrap">
+                <span>🛳️</span>
+                <input class="input" type="text" placeholder="Region or port" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Departure date</label>
+              <div class="input-wrap">
+                <span>📅</span>
+                <input class="input" type="date" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Type</label>
+              <div class="input-wrap">
+                <span>⚓</span>
+                <select class="select">
+                  <option>Family cruise</option>
+                  <option>Luxury</option>
+                  <option>Honeymoon</option>
+                  <option>Adventure</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Duration</label>
+              <div class="input-wrap">
+                <span>⏱️</span>
+                <select class="select">
+                  <option>3–5 nights</option>
+                  <option>6–8 nights</option>
+                  <option>9–14 nights</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <button type="submit" class="btn-primary search-btn">
+                <span>🔍</span> Search cruises
+              </button>
+            </div>
+          </form>
+          <div class="search-note">
+            Exclusive onboard credits &amp; upgrades on select cruise lines.
+          </div>
+        </div>
+
+        <!-- Insurance -->
+        <div class="search-panel" data-panel="insurance" style="display:none;">
+          <form class="search-form">
+            <div class="field">
+              <label>Trip type</label>
+              <div class="input-wrap">
+                <span>🎒</span>
+                <select class="select">
+                  <option>Single trip</option>
+                  <option>Multi-trip (annual)</option>
+                  <option>Student</option>
+                  <option>Business</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Duration</label>
+              <div class="input-wrap">
+                <span>⏳</span>
+                <select class="select">
+                  <option>Up to 7 days</option>
+                  <option>8–15 days</option>
+                  <option>16–30 days</option>
+                  <option>More than 30 days</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Coverage</label>
+              <div class="input-wrap">
+                <span>🛡️</span>
+                <select class="select">
+                  <option>Essential</option>
+                  <option>Plus (recommended)</option>
+                  <option>Premium</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Travellers</label>
+              <div class="input-wrap">
+                <span>👨‍👩‍👧‍👦</span>
+                <select class="select">
+                  <option>1 traveller</option>
+                  <option>Couple</option>
+                  <option>Family</option>
+                  <option>Group (5+)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <button type="submit" class="btn-primary search-btn">
+                <span>🔍</span> Get quote
+              </button>
+            </div>
+          </form>
+          <div class="search-note">
+            Medical, baggage &amp; trip cancellation cover included in all plans.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Services</div>
+            <h2 class="section-title">Everything you need for a perfect trip</h2>
+            <p class="section-desc">
+              From first search to final boarding call, Wizfair takes care of flights,
+              stays, activities and protection—so you can focus on the journey.
+            </p>
+          </div>
+          <a href="#" class="section-link">
+            View all services
+            <span>↗</span>
+          </a>
+        </div>
+
+        <div class="grid-4">
+          <article class="service-card">
+            <div class="service-icon">✈️</div>
+            <h3 class="service-title">Flight booking &amp; rebooking</h3>
+            <p class="service-text">
+              Get best available fares across 200+ airlines with flexible date changes
+              and 24x7 support.
+            </p>
+            <div class="service-meta">Smart fare alerts · Multi-city trips</div>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">🏨</div>
+            <h3 class="service-title">Hotels &amp; stays</h3>
+            <p class="service-text">
+              Handpicked properties, honest reviews and special perks on curated stays
+              worldwide.
+            </p>
+            <div class="service-meta">Free breakfast · Late checkout</div>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">🛳️</div>
+            <h3 class="service-title">Cruises &amp; experiences</h3>
+            <p class="service-text">
+              Discover ocean and river cruises, guided tours and unique experiences for
+              every kind of traveller.
+            </p>
+            <div class="service-meta">Family &amp; honeymoon specials</div>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">🛡️</div>
+            <h3 class="service-title">Travel insurance &amp; support</h3>
+            <p class="service-text">
+              Stay protected with comprehensive cover, claim assistance and in-trip
+              emergency help.
+            </p>
+            <div class="service-meta">Global assistance · Cashless claims</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROMOTIONS -->
+    <section id="deals">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Offers</div>
+            <h2 class="section-title">Handpicked deals &amp; featured destinations</h2>
+            <p class="section-desc">
+              Save more with limited-time offers, seasonal sales and exclusive partner
+              discounts across flights, hotels and holiday packages.
+            </p>
+          </div>
+          <a href="#" class="section-link">
+            Get deal alerts
+            <span>🔔</span>
+          </a>
+        </div>
+
+        <div class="promo-grid">
+          <div class="promo-feature">
+            <div class="promo-badge">
+              <span>🔥</span>
+              Limited time festival offer
+            </div>
+            <div class="promo-percent">Up to 40% off</div>
+            <div class="promo-title">On return flights to Europe &amp; UK</div>
+            <div class="promo-text">
+              Book by 31st Dec and travel anytime till June. No-cost EMI for up to 6
+              months on major cards.
+            </div>
+            <div class="promo-dates">
+              Promo code: WIZEURO40 · T&amp;C apply
+            </div>
+            <svg class="promo-map-dots" viewBox="0 0 140 80" aria-hidden="true">
+              <circle cx="10" cy="40" r="2" fill="#93c5fd"></circle>
+              <circle cx="35" cy="25" r="2" fill="#bfdbfe"></circle>
+              <circle cx="60" cy="50" r="2" fill="#eff6ff"></circle>
+              <circle cx="85" cy="30" r="2" fill="#93c5fd"></circle>
+              <circle cx="110" cy="45" r="2" fill="#bfdbfe"></circle>
+            </svg>
+          </div>
+
+          <div class="promo-list">
+            <article class="deal-card">
+              <div class="deal-tag">
+                <span>🏝️</span> Beach escapes
+              </div>
+              <div class="deal-main">Maldives &amp; Bali packages</div>
+              <div class="deal-meta">4N/5D including flights, stay &amp; transfers</div>
+              <div class="deal-price">From $799 per person</div>
+            </article>
+
+            <article class="deal-card">
+              <div class="deal-tag">
+                <span>🏙️</span> City breaks
+              </div>
+              <div class="deal-main">Dubai long weekend</div>
+              <div class="deal-meta">Visa assistance + desert safari combo</div>
+              <div class="deal-price">Save up to 25%</div>
+            </article>
+
+            <article class="deal-card">
+              <div class="deal-tag">
+                <span>⛰️</span> Adventure
+              </div>
+              <div class="deal-main">Swiss &amp; Austrian Alps</div>
+              <div class="deal-meta">Rail passes, cable cars &amp; more</div>
+              <div class="deal-price">Early bird discounts</div>
+            </article>
+
+            <article class="deal-card">
+              <div class="deal-tag">
+                <span>👨‍👩‍👧‍👦</span> Family
+              </div>
+              <div class="deal-main">Singapore &amp; Sentosa fun</div>
+              <div class="deal-meta">Theme parks &amp; kids stay free offers</div>
+              <div class="deal-price">From $599 per family</div>
+            </article>
+
+            <article class="deal-card">
+              <div class="deal-tag">
+                <span>💼</span> Business
+              </div>
+              <div class="deal-main">Corporate travel programs</div>
+              <div class="deal-meta">Dedicated account manager &amp; GST billing</div>
+              <div class="deal-price">Talk to sales</div>
+            </article>
+
+            <article class="deal-card">
+              <div class="deal-tag">
+                <span>🧳</span> Long stays
+              </div>
+              <div class="deal-main">Work from anywhere</div>
+              <div class="deal-meta">Monthly stays with flat rates</div>
+              <div class="deal-price">Up to 35% off</div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS & TRUST -->
+    <section id="trust">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <div class="section-kicker">Trust</div>
+            <h2 class="section-title">Loved by travellers, backed by partners</h2>
+            <p class="section-desc">
+              Wizfair brings together expert travel planners, trusted airlines and
+              global hotel chains to ensure every trip is smooth, safe and memorable.
+            </p>
+          </div>
+          <a href="#" class="section-link">
+            Read all reviews
+            <span>↗</span>
+          </a>
+        </div>
+
+        <div class="test-grid">
+          <aside class="trust-panel">
+            <div class="trust-score">
+              <div class="rating-badge">
+                <div class="rating-stars">★★★★★</div>
+                <div class="rating-value">4.8</div>
+                <div class="rating-label">Average rating</div>
+              </div>
+              <div class="trust-text">
+                Based on <strong>15,000+</strong> verified reviews across platforms.
+                9 out of 10 travellers say they would book again with Wizfair.
+              </div>
+            </div>
+            <div class="trust-text">
+              Trusted partners:
+            </div>
+            <div class="partner-logos">
+              <div class="partner-pill">Global airlines alliance</div>
+              <div class="partner-pill">Top hotel chains</div>
+              <div class="partner-pill">Leading cruise lines</div>
+              <div class="partner-pill">International insurers</div>
+            </div>
+          </aside>
+
+          <div class="testimonials">
+            <article class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="user-info">
+                  <div class="avatar">A</div>
+                  <div class="user-meta">
+                    <div class="user-name">Ananya Gupta</div>
+                    <div class="user-trip">Family trip · Singapore</div>
+                  </div>
+                </div>
+                <div class="rating-stars">★★★★★</div>
+              </div>
+              <div class="testimonial-body">
+                “Everything from visas to hotel check-ins was handled flawlessly. The
+                kids loved every moment and we didn’t have to worry about a thing.”
+              </div>
+              <div class="testimonial-footer">
+                <span>Booked via Wizfair app</span>
+                <span>3 weeks ago</span>
+              </div>
+            </article>
+
+            <article class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="user-info">
+                  <div class="avatar">R</div>
+                  <div class="user-meta">
+                    <div class="user-name">Rahul Mehta</div>
+                    <div class="user-trip">Business · London</div>
+                  </div>
+                </div>
+                <div class="rating-stars">★★★★☆</div>
+              </div>
+              <div class="testimonial-body">
+                “Last minute flight change was managed in under 10 minutes. Corporate
+                billing and GST invoices made accounting super easy.”
+              </div>
+              <div class="testimonial-footer">
+                <span>Dedicated travel desk</span>
+                <span>1 month ago</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">
+            <img src="https://www.wizfairtravels.com/images/logo.png" alt="Wizfair Travels logo" />
+          </div>
+          <p class="footer-text">
+            Wizfair is your smart travel partner for flights, stays, cruises and
+            insurance—designed to make every journey simpler, safer and more rewarding.
+          </p>
+          <div class="social-row">
+            <div class="social-icon">𝕏</div>
+            <div class="social-icon">f</div>
+            <div class="social-icon">in</div>
+            <div class="social-icon">▶</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Company</div>
+          <ul class="footer-links">
+            <li><a href="#">About Wizfair</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">News &amp; media</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Support</div>
+          <ul class="footer-links">
+            <li><a href="#">Help center</a></li>
+            <li><a href="#">Manage booking</a></li>
+            <li><a href="#">Payment options</a></li>
+            <li><a href="#">Cancellations &amp; refunds</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Stay in the loop</div>
+          <form class="newsletter-form">
+            <div class="newsletter-input-wrap">
+              <input
+                class="newsletter-input"
+                type="email"
+                placeholder="Enter your email for deals"
+              />
+              <button type="submit" class="btn-footer">Subscribe</button>
+            </div>
+            <span style="font-size:11px; color:#6b7280;">
+              No spam, only the best travel stories &amp; offers.
+            </span>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Wizfair Travels. All rights reserved.</span>
+        <span>Terms · Privacy · Cookie policy</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Tab switch for search module
+    const tabs = document.querySelectorAll(".search-tab");
+    const panels = document.querySelectorAll(".search-panel");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const target = tab.getAttribute("data-tab");
+        tabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        panels.forEach((panel) => {
+          panel.style.display =
+            panel.getAttribute("data-panel") === target ? "block" : "none";
+        });
+      });
+    });
+
+    // Footer year
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+</body>
+</html>
