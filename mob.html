@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" style="height: auto; min-height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Group - Marzi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        marzi: {
+                            primary: '#6B46C1',
+                            secondary: '#9333EA',
+                            accent: '#F59E0B',
+                            warm: '#FEF3C7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50" style="height: auto; min-height: 100%;">
+    <div class="flex flex-col">
+        <header class="bg-white border-b border-gray-200 px-5 py-4 sticky top-0 z-10">
+            <div class="flex items-center gap-4">
+                <button onclick="goBack()" class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-arrow-left text-gray-700 text-lg"></i>
+                </button>
+                <div class="flex-1">
+                    <h1 class="text-2xl font-bold text-gray-900">Create New Group</h1>
+                    <p class="text-sm text-gray-600 mt-0.5">Build your community</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="pb-8">
+            <div class="p-5 space-y-6">
+                <div>
+                    <label class="block text-lg font-bold text-gray-900 mb-3">Group Cover Photo *</label>
+                    <div id="coverPhotoPreview" class="w-full h-48 bg-gradient-to-br from-purple-100 to-purple-50 rounded-3xl flex items-center justify-center border-3 border-dashed border-purple-300 cursor-pointer hover:border-marzi-primary transition-colors overflow-hidden" onclick="document.getElementById('coverPhotoInput').click()">
+                        <div class="text-center" id="uploadPrompt">
+                            <i class="fas fa-camera text-5xl text-purple-400 mb-3"></i>
+                            <p class="text-lg text-gray-700 font-semibold">Add Cover Photo</p>
+                            <p class="text-sm text-gray-500 mt-1">Tap to upload</p>
+                        </div>
+                        <img id="previewImage" class="hidden w-full h-full object-cover" alt="Cover preview">
+                    </div>
+                    <input type="file" id="coverPhotoInput" accept="image/*" class="hidden" onchange="previewCoverPhoto(event)">
+                    <p class="text-sm text-gray-500 mt-2">Choose an image that represents your group (recommended: 800x400px)</p>
+                </div>
+
+                <div>
+                    <label class="block text-lg font-bold text-gray-900 mb-3">Group Name *</label>
+                    <input type="text" id="groupName" placeholder="e.g., Morning Walkers Club" class="w-full px-5 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-marzi-primary focus:border-transparent" maxlength="60">
+                    <p class="text-sm text-gray-500 mt-2">Choose a clear, descriptive name (max 60 characters)</p>
+                </div>
+
+                <div>
+                    <label class="block text-lg font-bold text-gray-900 mb-3">Category *</label>
+                    <div class="relative">
+                        <select id="category" class="w-full px-5 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-marzi-primary focus:border-transparent bg-white appearance-none pr-12">
+                            <option value="">Select a category</option>
+                            <option value="hobbies">🎨 Hobbies & Interests</option>
+                            <option value="learning">📚 Learning & Education</option>
+                            <option value="travel">✈️ Travel & Exploration</option>
+                            <option value="social">🤝 Social Causes</option>
+                            <option value="wellness">🧘 Wellness & Health</option>
+                            <option value="arts">🎭 Arts & Culture</option>
+                            <option value="technology">💻 Technology</option>
+                            <option value="spirituality">🕉️ Spirituality</option>
+                            <option value="food">🍳 Food & Cooking</option>
+                            <option value="finance">💰 Finance & Investment</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Help people find your group easily</p>
+                </div>
+
+                <div>
+                    <label class="block text-lg font-bold text-gray-900 mb-3">Description *</label>
+                    <textarea id="description" placeholder="Tell people what your group is about, what activities you'll do, and what members can expect..." rows="6" class="w-full px-5 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-marzi-primary focus:border-transparent resize-none" maxlength="500"></textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <p class="text-sm text-gray-500">Be clear about the group's purpose and activities</p>
+                        <p class="text-sm text-gray-400"><span id="charCount">0</span>/500</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-lg font-bold text-gray-900 mb-3">Group Privacy *</label>
+                    <div class="space-y-3">
+                        <label class="flex items-start p-5 border-2 border-marzi-primary bg-purple-50 rounded-2xl cursor-pointer">
+                            <input type="radio" name="privacy" value="public" class="w-6 h-6 text-marzi-primary mt-1 flex-shrink-0" checked>
+                            <div class="ml-4 flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="fas fa-globe text-marzi-primary"></i>
+                                    <p class="font-bold text-gray-900 text-lg">Public Group</p>
+                                </div>
+                                <p class="text-base text-gray-600 leading-relaxed">Anyone can discover, view, and join this group. All posts are visible to everyone.</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start p-5 border-2 border-gray-300 rounded-2xl cursor-pointer hover:border-marzi-primary transition-colors">
+                            <input type="radio" name="privacy" value="private" class="w-6 h-6 text-marzi-primary mt-1 flex-shrink-0">
+                            <div class="ml-4 flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="fas fa-lock text-gray-600"></i>
+                                    <p class="font-bold text-gray-900 text-lg">Private Group</p>
+                                </div>
+                                <p class="text-base text-gray-600 leading-relaxed">Members need your approval to join. Content is visible only to approved members.</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-lg font-bold text-gray-900 mb-3">Group Rules (Optional)</label>
+                    <textarea id="rules" placeholder="Set guidelines for your group members (e.g., Be respectful, No spam, Stay on topic...)" rows="4" class="w-full px-5 py-4 text-lg border-2 border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-marzi-primary focus:border-transparent resize-none"></textarea>
+                    <p class="text-sm text-gray-500 mt-2">Help maintain a positive community environment</p>
+                </div>
+
+                <div>
+                    <label class="block text-lg font-bold text-gray-900 mb-3">Additional Settings</label>
+                    <div class="space-y-4">
+                        <label class="flex items-start gap-4 cursor-pointer">
+                            <input type="checkbox" id="allowPosts" class="w-6 h-6 text-marzi-primary rounded mt-1 flex-shrink-0" checked>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-900 text-base">Allow all members to post</p>
+                                <p class="text-sm text-gray-600 mt-1">If unchecked, only admins can create posts</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-4 cursor-pointer">
+                            <input type="checkbox" id="requireApproval" class="w-6 h-6 text-marzi-primary rounded mt-1 flex-shrink-0">
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-900 text-base">Approve posts before publishing</p>
+                                <p class="text-sm text-gray-600 mt-1">Review all posts before they appear in the group</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-4 cursor-pointer">
+                            <input type="checkbox" id="allowInvites" class="w-6 h-6 text-marzi-primary rounded mt-1 flex-shrink-0" checked>
+                            <div class="flex-1">
+                                <p class="font-semibold text-gray-900 text-base">Let members invite others</p>
+                                <p class="text-sm text-gray-600 mt-1">Members can invite their friends to join</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-200 rounded-2xl p-5">
+                    <div class="flex gap-3">
+                        <i class="fas fa-lightbulb text-2xl text-amber-600 flex-shrink-0"></i>
+                        <div>
+                            <p class="font-bold text-gray-900 text-base mb-2">Tips for a successful group</p>
+                            <ul class="space-y-1.5 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-amber-600 mt-0.5 flex-shrink-0"></i>
+                                    <span>Post regularly to keep members engaged</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-amber-600 mt-0.5 flex-shrink-0"></i>
+                                    <span>Welcome new members personally</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-amber-600 mt-0.5 flex-shrink-0"></i>
+                                    <span>Organize regular activities or discussions</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-amber-600 mt-0.5 flex-shrink-0"></i>
+                                    <span>Respond to comments and questions promptly</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button onclick="validateAndCreateGroup()" class="w-full py-5 bg-gradient-to-r from-marzi-primary to-marzi-secondary text-white rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-3">
+                        <i class="fas fa-users"></i>
+                        <span>Create Group</span>
+                    </button>
+                    <p class="text-center text-sm text-gray-500 mt-4">By creating a group, you agree to Marzi's Community Guidelines</p>
+                </div>
+            </div>
+        </main>
+
+        <div id="successModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-5">
+            <div class="bg-white rounded-3xl p-8 max-w-sm w-full text-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
+                    <i class="fas fa-check text-4xl text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-3">Group Created!</h2>
+                <p class="text-base text-gray-600 mb-6 leading-relaxed">Your community is now live. Start inviting members and sharing content.</p>
+                <button onclick="goToGroup()" class="w-full py-4 bg-marzi-primary text-white rounded-2xl font-bold text-lg mb-3">View My Group</button>
+                <button onclick="goBack()" class="w-full py-4 bg-gray-100 text-gray-700 rounded-2xl font-semibold text-lg">Discover More Groups</button>
+            </div>
+        </div>
+
+        <div id="errorToast" class="hidden fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 flex items-center gap-3 max-w-sm">
+            <i class="fas fa-exclamation-circle text-2xl"></i>
+            <span class="font-semibold text-base" id="errorMessage">Please fill all required fields</span>
+        </div>
+    </div>
+
+    <script>
+        const descriptionField = document.getElementById('description');
+        const charCount = document.getElementById('charCount');
+
+        descriptionField.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+
+        function previewCoverPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('uploadPrompt').classList.add('hidden');
+                    const previewImage = document.getElementById('previewImage');
+                    previewImage.src = e.target.result;
+                    previewImage.classList.remove('hidden');
+                    document.getElementById('coverPhotoPreview').classList.remove('border-dashed', 'border-purple-300');
+                    document.getElementById('coverPhotoPreview').classList.add('border-solid', 'border-marzi-primary');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showError(message) {
+            const errorToast = document.getElementById('errorToast');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorToast.classList.remove('hidden');
+            setTimeout(() => {
+                errorToast.classList.add('hidden');
+            }, 3000);
+        }
+
+        function validateAndCreateGroup() {
+            const groupName = document.getElementById('groupName').value.trim();
+            const category = document.getElementById('category').value;
+            const description = document.getElementById('description').value.trim();
+            const coverPhoto = document.getElementById('coverPhotoInput').files[0];
+
+            if (!coverPhoto) {
+                showError('Please add a cover photo');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            if (!groupName) {
+                showError('Please enter a group name');
+                document.getElementById('groupName').focus();
+                return;
+            }
+
+            if (!category) {
+                showError('Please select a category');
+                document.getElementById('category').focus();
+                return;
+            }
+
+            if (!description) {
+                showError('Please add a description');
+                document.getElementById('description').focus();
+                return;
+            }
+
+            if (description.length < 50) {
+                showError('Description should be at least 50 characters');
+                document.getElementById('description').focus();
+                return;
+            }
+
+            createGroup();
+        }
+
+        function createGroup() {
+            setTimeout(() => {
+                document.getElementById('successModal').classList.remove('hidden');
+            }, 500);
+        }
+
+        function goToGroup() {
+            document.getElementById('successModal').classList.add('hidden');
+            window.location.href = '#';
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
